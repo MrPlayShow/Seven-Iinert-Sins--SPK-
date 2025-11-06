@@ -1,0 +1,155 @@
+/* Dark Red Theme Styles */
+body.dark-red-theme {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #e0e0e0;
+}
+
+.dark-red-theme header {
+    background: linear-gradient(135deg, #8B0000, #B22222) !important;
+}
+
+.dark-red-theme .hero {
+    background: linear-gradient(rgba(139, 0, 0, 0.85), rgba(178, 34, 34, 0.9)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') !important;
+}
+
+.dark-red-theme .stats {
+    background: #8B0000 !important;
+}
+
+.dark-red-theme .feature-card,
+.dark-red-theme .specialty-card:not(.secret-forum),
+.dark-red-theme .news-card {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444 !important;
+}
+
+.dark-red-theme .secret-forum {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 2px solid #DC143C !important;
+    display: block !important;
+    animation: forumAppear 0.8s ease-out;
+}
+
+@keyframes forumAppear {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dark-red-theme .secret-forum .specialty-content {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-red-theme .secret-forum h3 {
+    color: #FF4500 !important;
+}
+
+.dark-red-theme .secret-forum p {
+    color: #8a8a8a !important;
+}
+
+.dark-red-theme .forum-img {
+    background: linear-gradient(135deg, #8B0000, #DC143C) !important;
+}
+
+.dark-red-theme .specialties {
+    background: #1a1a1a !important;
+}
+
+.dark-red-theme .section-title h2 {
+    color: #FF4500 !important;
+}
+
+.dark-red-theme .section-title p {
+    color: #8a8a8a !important;
+}
+
+.dark-red-theme .feature-card h3,
+.dark-red-theme .specialty-card:not(.secret-forum) h3,
+.dark-red-theme .news-card h3 {
+    color: #FF4500 !important;
+}
+
+.dark-red-theme .feature-icon {
+    color: #DC143C !important;
+}
+
+.dark-red-theme .btn:not(.forum-btn) {
+    background: #DC143C !important;
+    color: white !important;
+}
+
+.dark-red-theme .btn:not(.forum-btn):hover {
+    background: #B22222 !important;
+}
+
+.dark-red-theme .forum-btn {
+    background: #8B0000 !important;
+    color: white !important;
+}
+
+.dark-red-theme .forum-btn:hover {
+    background: #DC143C !important;
+}
+
+.dark-red-theme .contact-form {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-red-theme .form-control {
+    background: #1a1a1a !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-red-theme .form-control:focus {
+    border-color: #FF4500 !important;
+    box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2) !important;
+}
+
+.dark-red-theme .form-group label {
+    color: #e0e0e0 !important;
+}
+
+.dark-red-theme footer {
+    background: #0a0a0a !important;
+}
+
+.dark-red-theme .footer-links a:hover {
+    color: #FF4500 !important;
+}
+
+.dark-red-theme .specialty-content p,
+.dark-red-theme .feature-card p,
+.dark-red-theme .news-content p {
+    color: #8a8a8a !important;
+}
+
+.dark-red-theme .contact {
+    background: linear-gradient(135deg, #8B0000, #B22222) !important;
+}
+
+.dark-red-theme .contact .section-title h2 {
+    color: white !important;
+}
+
+.dark-red-theme .contact .section-title p {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.dark-red-theme .contact-item h3 {
+    color: #FF4500 !important;
+}
+
+.dark-red-theme .contact-item p {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
