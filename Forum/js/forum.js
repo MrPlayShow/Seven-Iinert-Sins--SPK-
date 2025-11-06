@@ -1,5 +1,7 @@
 // Forum functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎮 Seven Inert Sins Forum - Development Mode initialized');
+    
     // Initialize forum
     initForum();
 });
@@ -11,8 +13,38 @@ function initForum() {
     // Add event listeners
     setupEventListeners();
     
+    // Setup NSFW warning close functionality
+    setupNSFWWarning();
+    
     // Show development message
     showDevMessage();
+}
+
+function setupNSFWWarning() {
+    const nsfwWarning = document.querySelector('.nsfw-warning');
+    if (!nsfwWarning) return;
+    
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'nsfw-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.title = 'Закрыть предупреждение';
+    
+    // Add close button to warning
+    nsfwWarning.appendChild(closeBtn);
+    
+    // Close functionality
+    closeBtn.addEventListener('click', function() {
+        nsfwWarning.style.display = 'none';
+        
+        // Save preference to localStorage
+        localStorage.setItem('nsfwWarningClosed', 'true');
+    });
+    
+    // Check if user previously closed the warning
+    if (localStorage.getItem('nsfwWarningClosed') === 'true') {
+        nsfwWarning.style.display = 'none';
+    }
 }
 
 function animateCategoryCards() {
@@ -53,9 +85,10 @@ function setupEventListeners() {
 
 function handleCategoryClick(event) {
     event.preventDefault();
+    const categoryTitle = this.querySelector('.category-title').textContent;
     showAlert(
         '🚧 Раздел в разработке',
-        'Это демо-версия форума. Реальный функционал появится позже.'
+        `Раздел "${categoryTitle}" находится в разработке. Функционал появится в ближайшее время.`
     );
 }
 
@@ -63,7 +96,7 @@ function handleNewThreadClick(event) {
     event.preventDefault();
     showAlert(
         '🔒 Функция недоступна',
-        'Создание новых тем временно заблокировано. Форум находится в разработке.'
+        'Создание новых тем временно заблокировано. Форум находится в активной разработке.'
     );
 }
 
@@ -71,7 +104,7 @@ function handleThreadClick(event) {
     event.preventDefault();
     showAlert(
         '📝 Пример темы',
-        'Это демонстрационная тема. Реальные темы появятся после завершения разработки форума.'
+        'Это демонстрационная тема. Реальные темы появятся после завершения разработки функционала форума.'
     );
 }
 
@@ -81,7 +114,7 @@ function handleNavClick(event) {
         event.preventDefault();
         showAlert(
             '🔧 Навигация',
-            'Раздел "' + link.textContent + '" находится в разработке.'
+            `Раздел "${link.textContent}" находится в разработке и будет доступен в ближайшем обновлении.`
         );
     }
 }
@@ -115,7 +148,7 @@ function showAlert(title, message) {
             animation: slideIn 0.3s ease;
         ">
             <h3 style="color: #FF4500; margin-bottom: 1rem;">${title}</h3>
-            <p style="margin-bottom: 1.5rem; color: #e0e0e0;">${message}</p>
+            <p style="margin-bottom: 1.5rem; color: #e0e0e0; line-height: 1.5;">${message}</p>
             <button onclick="this.parentElement.parentElement.remove()" style="
                 background: #FF4500;
                 color: white;
@@ -124,7 +157,8 @@ function showAlert(title, message) {
                 border-radius: 20px;
                 cursor: pointer;
                 font-weight: bold;
-            ">Понятно</button>
+                transition: all 0.3s ease;
+            " onmouseover="this.style.background='#ff5500'" onmouseout="this.style.background='#FF4500'">Понятно</button>
         </div>
     `;
     
@@ -150,6 +184,13 @@ function showAlert(title, message) {
             alertModal.remove();
         }
     }, 5000);
+    
+    // Close on background click
+    alertModal.addEventListener('click', function(e) {
+        if (e.target === alertModal) {
+            alertModal.remove();
+        }
+    });
 }
 
 function showDevMessage() {
@@ -161,13 +202,9 @@ function showDevMessage() {
     🔒 Functionality: Limited
     📱 Responsive: Yes
     🎨 Theme: Dark Red NSFW
+    📊 Categories: 6 (Домашка, Сливы, Преподователи, Фрики, SoundCloud, Разное)
     
     Note: This is a demonstration version.
     Real functionality will be implemented later.
     `);
 }
-
-// Make functions globally available for HTML onclick events
-window.handleCategoryClick = handleCategoryClick;
-window.handleNewThreadClick = handleNewThreadClick;
-window.handleThreadClick = handleThreadClick;
