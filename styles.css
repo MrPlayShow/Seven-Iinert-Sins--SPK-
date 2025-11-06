@@ -20,6 +20,7 @@ body {
     background-color: var(--light);
     color: var(--dark);
     line-height: 1.6;
+    overflow-x: hidden; /* Убираем горизонтальный скролл */
 }
 
 .container {
@@ -127,6 +128,7 @@ nav a:hover::after {
     font-size: 1.5rem;
     cursor: pointer;
     align-items: center;
+    z-index: 1001;
 }
 
 /* Theme Switch Styles */
@@ -685,6 +687,79 @@ footer {
     transform: rotate(360deg);
 }
 
+/* NSFW Warning Styles */
+.nsfw-warning {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid #FF6B6B;
+    border-radius: 8px;
+}
+
+.nsfw-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+}
+
+.nsfw-checkbox input {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FF6B6B;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.nsfw-checkbox input:checked + .checkmark {
+    background: #FF6B6B;
+    border-color: #FF6B6B;
+}
+
+.nsfw-checkbox input:checked + .checkmark:after {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+}
+
+.nsfw-checkbox:hover .checkmark {
+    border-color: #FF4500;
+}
+
+/* Disabled button styles */
+.btn:disabled {
+    background: #666 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn:disabled:hover {
+    background: #666 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Dark theme adjustments for NSFW modal */
+.dark-red-theme .secret-modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+}
+
+.dark-red-theme .nsfw-warning {
+    background: rgba(255, 107, 107, 0.15);
+    border-color: #FF4500;
+}
+
 /* Dark Red Theme Styles */
 body.dark-red-theme {
     background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
@@ -841,7 +916,7 @@ body.dark-red-theme {
     color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Responsive Design */
+/* Mobile Responsive Design */
 @media (max-width: 992px) {
     .about-content, .contact-content {
         grid-template-columns: 1fr;
@@ -853,25 +928,45 @@ body.dark-red-theme {
 }
 
 @media (max-width: 768px) {
+    /* Мобильное меню - открывается слева */
     nav ul {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--primary);
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
         flex-direction: column;
-        padding: 1rem;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 80px 2rem 2rem;
+        transition: var(--transition);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        gap: 0;
     }
 
     nav ul.active {
-        display: flex;
+        left: 0;
+    }
+
+    nav ul li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav ul li:last-child {
+        border-bottom: none;
+    }
+
+    nav a {
+        padding: 1rem 0;
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .mobile-menu-btn {
-        display: block;
+        display: flex;
+        position: relative;
+        z-index: 1000;
     }
 
     .theme-switch-wrapper {
@@ -895,19 +990,66 @@ body.dark-red-theme {
         font-size: 2rem;
     }
 
-    nav ul {
-        gap: 1rem;
-        flex-direction: column;
-        align-items: center;
-    }
-    
     .header-content {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
-    
+
     nav {
-        display: flex;
-        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Убираем белую полосу справа */
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    /* Улучшаем отображение карточек на мобильных */
+    .features-grid,
+    .specialties-grid,
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .feature-card,
+    .specialty-card,
+    .news-card {
+        margin: 0 10px;
+    }
+
+    /* Кнопки в герое на мобильных */
+    .hero .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+        margin-left: 0;
+    }
+
+    .hero .btn-secondary {
+        margin-left: 0;
+    }
+
+    /* Контактная форма на мобильных */
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Статистика на мобильных */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    /* Футер на мобильных */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
 
@@ -933,77 +1075,66 @@ body.dark-red-theme {
     .logo-subtext {
         font-size: 0.8rem;
     }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-item h3 {
+        font-size: 2rem;
+    }
+
+    /* Уменьшаем отступы для очень маленьких экранов */
+    .section {
+        padding: 2rem 0;
+    }
+
+    .hero {
+        padding: 3rem 0;
+    }
+
+    /* Улучшаем мобильное меню для очень маленьких экранов */
+    nav ul {
+        width: 100%;
+        padding: 80px 1rem 2rem;
+    }
+
+    /* Улучшаем отображение модального окна на маленьких экранах */
+    .secret-modal-content {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .nsfw-checkbox {
+        font-size: 0.8rem;
+    }
 }
 
-/* NSFW Warning Styles */
-.nsfw-warning {
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid #FF6B6B;
-    border-radius: 8px;
-}
+/* Дополнительные исправления для очень маленьких устройств */
+@media (max-width: 360px) {
+    .logo {
+        gap: 10px;
+    }
 
-.nsfw-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #e0e0e0;
-}
+    .logo-icon {
+        font-size: 2rem;
+    }
 
-.nsfw-checkbox input {
-    display: none;
-}
+    .logo-text {
+        font-size: 1rem;
+    }
 
-.checkmark {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #FF6B6B;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: var(--transition);
-}
+    .theme-switch {
+        width: 50px;
+        height: 28px;
+    }
 
-.nsfw-checkbox input:checked + .checkmark {
-    background: #FF6B6B;
-    border-color: #FF6B6B;
-}
+    .slider:before {
+        width: 20px;
+        height: 20px;
+    }
 
-.nsfw-checkbox input:checked + .checkmark:after {
-    content: '✓';
-    color: white;
-    font-weight: bold;
-}
-
-.nsfw-checkbox:hover .checkmark {
-    border-color: #FF4500;
-}
-
-/* Disabled button styles */
-.btn:disabled {
-    background: #666 !important;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-.btn:disabled:hover {
-    background: #666 !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Dark theme adjustments for NSFW modal */
-.dark-red-theme .secret-modal-content {
-    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-}
-
-.dark-red-theme .nsfw-warning {
-    background: rgba(255, 107, 107, 0.15);
-    border-color: #FF4500;
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
 }
