@@ -142,12 +142,12 @@ document.addEventListener('DOMContentLoaded', function() {
     closeModalBtn.addEventListener('click', closeModal);
     closeForumBtn.addEventListener('click', closeModal);
 
-    // Enter forum with age confirmation - прямой переход без уведомлений
+ // Enter forum with age confirmation - прямой переход на форум
     enterForumBtn.addEventListener('click', function() {
         if (nsfwCheckbox && nsfwCheckbox.checked) {
             closeModal();
-            // Прямой переход на форум без подтверждения
-            window.open('https://example.com/secret-forum', '_blank');
+            // Прямой переход на страницу форума
+            window.location.href = 'forum/forum.html';
         } else {
             alert('❌ Для входа необходимо подтвердить, что вам есть 18 лет и вы согласны с просмотром NSFW контента');
         }
