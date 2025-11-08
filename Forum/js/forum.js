@@ -359,6 +359,19 @@ function showNotification(message, type = 'info') {
     document.head.appendChild(style);
 }
 
+// И убираем вызов из initForum():
+function initForum() {
+    console.log('🎮 Seven Inert Sins Forum - Development Mode initialized');
+    
+    // Initialize forum
+    animateCategoryCards();
+    setupEventListeners();
+    setupNSFWWarning();
+    initSettingsModal();
+    // initOnlineCounter(); // УБИРАЕМ эту строку
+    showDevMessage();
+}
+
 function showDevMessage() {
     console.log(`
     🎮 Seven Inert Sins Forum - Development Mode
