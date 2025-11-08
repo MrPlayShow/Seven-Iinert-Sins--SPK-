@@ -1,4 +1,4 @@
-// Forum functionality
+// forum.js - полная версия
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🎮 Seven Inert Sins Forum - Development Mode initialized');
     
@@ -15,6 +15,9 @@ function initForum() {
     
     // Setup NSFW warning close functionality
     setupNSFWWarning();
+    
+    // Initialize settings modal
+    initSettingsModal();
     
     // Show development message
     showDevMessage();
@@ -78,8 +81,25 @@ function setupEventListeners() {
     });
 
     // Navigation menu clicks
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.addEventListener('click', handleNavClick);
+    document.querySelectorAll('.nav-menu a').forEach((link, index) => {
+        link.addEventListener('click', function(e) {
+            // Если это Настройки (третья ссылка) - открываем модальное окно
+            if (index === 2) {
+                e.preventDefault();
+                const settingsModal = document.querySelector('.settings-modal');
+                if (settingsModal) {
+                    settingsModal.style.display = 'flex';
+                }
+            } 
+            // Если это другие ссылки (кроме активной) - показываем alert
+            else if (!this.classList.contains('active')) {
+                e.preventDefault();
+                showAlert(
+                    '🔧 Навигация',
+                    `Раздел "${this.textContent}" находится в разработке и будет доступен в ближайшем обновлении.`
+                );
+            }
+        });
     });
 }
 
@@ -106,17 +126,6 @@ function handleThreadClick(event) {
         '📝 Пример темы',
         'Это демонстрационная тема. Реальные темы появятся после завершения разработки функционала форума.'
     );
-}
-
-function handleNavClick(event) {
-    const link = event.currentTarget;
-    if (!link.classList.contains('active')) {
-        event.preventDefault();
-        showAlert(
-            '🔧 Навигация',
-            `Раздел "${link.textContent}" находится в разработке и будет доступен в ближайшем обновлении.`
-        );
-    }
 }
 
 function showAlert(title, message) {
@@ -193,6 +202,163 @@ function showAlert(title, message) {
     });
 }
 
+// Settings Modal functionality
+function initSettingsModal() {
+    createSettingsModal();
+    setupSettingsEvents();
+}
+
+function createSettingsModal() {
+    if (document.querySelector('.settings-modal')) return;
+    
+    const settingsModal = document.createElement('div');
+    settingsModal.className = 'settings-modal';
+    settingsModal.innerHTML = `
+        <div class="settings-modal-content">
+            <button class="close-settings">&times;</button>
+            <h2><i class="fas fa-cog"></i> Настройки форума</h2>
+            
+            <div class="settings-group">
+                <h3>Звук</h3>
+                <div class="setting-item">
+                    <label class="setting-label">
+                        <span>🔊 Звуковые эффекты</span>
+                        <input type="checkbox" id="sound-effects" checked>
+                        <span class="setting-switch"></span>
+                    </label>
+                    <p class="setting-description">Воспроизводить звуки при взаимодействии</p>
+                </div>
+            </div>
+            
+            <div class="settings-group">
+                <h3>Уведомления</h3>
+                <div class="setting-item">
+                    <label class="setting-label">
+                        <span>🔔 Уведомления</span>
+                        <input type="checkbox" id="notifications" checked>
+                        <span class="setting-switch"></span>
+                    </label>
+                    <p class="setting-description">Показывать всплывающие уведомления</p>
+                </div>
+            </div>
+            
+            <div class="settings-actions">
+                <button class="btn-save">Сохранить</button>
+                <button class="btn-cancel">Отмена</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(settingsModal);
+    
+    // Load saved settings
+    loadSettings();
+}
+
+function setupSettingsEvents() {
+    const settingsModal = document.querySelector('.settings-modal');
+    const closeBtn = settingsModal.querySelector('.close-settings');
+    const cancelBtn = settingsModal.querySelector('.btn-cancel');
+    const saveBtn = settingsModal.querySelector('.btn-save');
+    
+    // Close settings
+    const closeModal = function() {
+        settingsModal.style.display = 'none';
+        loadSettings(); // Reset to saved values
+    };
+    
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    
+    // Save settings
+    saveBtn.addEventListener('click', function() {
+        saveSettings();
+        closeModal();
+        showNotification('✅ Настройки сохранены!', 'success');
+    });
+    
+    // Close on background click
+    settingsModal.addEventListener('click', function(e) {
+        if (e.target === settingsModal) {
+            closeModal();
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && settingsModal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+}
+
+function loadSettings() {
+    const settings = JSON.parse(localStorage.getItem('forumSettings')) || {
+        soundEffects: true,
+        notifications: true
+    };
+    
+    document.getElementById('sound-effects').checked = settings.soundEffects;
+    document.getElementById('notifications').checked = settings.notifications;
+    
+    applySettings(settings);
+}
+
+function saveSettings() {
+    const settings = {
+        soundEffects: document.getElementById('sound-effects').checked,
+        notifications: document.getElementById('notifications').checked
+    };
+    
+    localStorage.setItem('forumSettings', JSON.stringify(settings));
+    applySettings(settings);
+}
+
+function applySettings(settings) {
+    // Apply sound settings (will be used later)
+    window.forumSettings = settings;
+    
+    console.log('⚙️ Settings applied:', settings);
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 function showDevMessage() {
     console.log(`
     🎮 Seven Inert Sins Forum - Development Mode
@@ -202,6 +368,7 @@ function showDevMessage() {
     🔒 Functionality: Limited
     📱 Responsive: Yes
     🎨 Theme: Dark Red NSFW
+    ⚙️  Settings: Sound & Notifications
     📊 Categories: 6 (Домашка, Сливы, Преподователи, Фрики, SoundCloud, Разное)
     
     Note: This is a demonstration version.
